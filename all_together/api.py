@@ -46,7 +46,7 @@ def add_user(user: UserCreate):
             db.commit()
         except Exception as e:
             db.rollback()
-            print(f"{e} \n Error occured") 
+            print(f"{e} \n Error occured")
         finally:
             print("user: {a_user.name} has been added")
 
@@ -84,7 +84,7 @@ def update_user_details(user_id: int, user: UserCreate, db:Session=Depends(get_d
     user_check = db.execute(select(User).where(User.id == user_id)).scalar()
     if not user_check:
         return "User with that id does not exist"
-    
+
     if not user.model_dump(exclude_unset=True):
             return {
                 "message": "Current user data",
@@ -94,7 +94,7 @@ def update_user_details(user_id: int, user: UserCreate, db:Session=Depends(get_d
                     "username": user_check.username
                     }
                 }
-             
+
     updated_details = user.model_dump(exclude_unset=True)
     db.execute(update(User).where(User.id == user_id).values(**updated_details))
     db.commit()

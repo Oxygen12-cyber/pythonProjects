@@ -1,18 +1,91 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from dbmodels.db_model import get_db, User, Inventory
-from pymodels.pyd_model import UserCreate, UserLogin
+from pymodels.pyd_model import UserCreate, UserResponse, UserUpdate, InventoryCheck, InventoryResponse
 
 
-app = FastAPI()
+app = FastAPI(title="Cli App")
 
 @app.get("/")
 def home():
     return "hello user"
 
 # DB OPERATIONS 
-@app.post("/")
+# create new user
+@app.post("/register_user", response_model=UserResponse)
 def create_new_user(user: UserCreate, db: Session = Depends(get_db)):
-    pass
+    user_exists = db.execute(select(User).where(User.email == user.email)).scalars().first()
+
+    if user_exists:
+        raise HTTPException(status_code=404, detail="User already exists")
+    new_user = User(
+        name=user.name, 
+        username=user.username, 
+        email=user.email, 
+        password=user.password
+    )
+    
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
+
+#create new task
+@app.post("/products/{user_email}", response_model=InventoryResponse)
+def create_new_task(user_email: str, produce: InventoryCheck, db: Session = Depends(get_db)):
+    user_exists = db.execute(select(User).where(User.email == user_email)).scalars().first()
+    if user_exists:
+        new_produce = Inventory(
+            name = produce.product_name,
+            price = produce.product_price,
+            description=produce.product_description,
+            user_id = user_exists.id
+        )
+        db.add(new_produce)
+        db.commit()
+        db.refresh(new_produce)
+        return new_produce
+    raise HTTPException(status_code=404, detail=f"no user by the email {user_email} exists")
+
+#check tasks specific to user
+@app.get("/products/{user_email}", response_model=list[InventoryResponse])
+def check_user_tasks(user_email: str, db: Session=Depends(get_db)):
+    user_exists = db.execute(select(User).where(User.email == user_email)).scalars().first()
+    if user_exists:
+        users_products = db.execute(select(Inventory).where(Inventory.user_id==user_exists.id)).scalars().all()
+        return users_products
+    raise HTTPException(status_code=404, detail="No user with email: {user_email} found!")
+
+# change username/details
+@app.patch("/users", response_model=UserResponse)
+def change_username(user_email:str, user_updates: UserUpdate, db:Session=Depends(get_db)):
+    user_exists = db.execute(select(User).where(User.email==user_email)).scalars().first()
+    if not user_exists:
+        raise HTTPException(status_code=404, detail='user with that email does not exist')
+    
+    updates = user_updates.model_dump(exclude_unset=True, exclude_none=True)
+
+    for key, values in updates.items():
+        setattr(user_exists, key, values)
+        
+    db.commit()
+    db.refresh(user_exists)
+    return user_exists
+
+# delete products
+@app.delete("/products/")
+def delete_product(user_email:str, product_id:int, db:Session=Depends(get_db)):
+    user_exists = db.execute(select(User).where(User.email==user_email)).scalars().first()
+    users_product = db.execute(select(Inventory).where(Inventory.id==product_id)).scalars().first()
+
+    if not user_exists:
+        raise HTTPException(status_code=404, detail='user with that email does not exist')
+    if not users_product:
+        raise HTTPException(status_code=404, detail='product with that id does not exist')
+    db.delete(users_product)
+    db.commit()
+    db.refresh(user_exists)
+    return "{'message':'this product has been deleted'}"

@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import sessionmaker, Mapped,mapped_column, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 # DB INITIALIZATION
@@ -16,11 +16,11 @@ def get_db():
 class User(Base):
     __tablename__ = "user"
 
-    id: int = Column(Integer, primary_key=True)
-    name: str = Column(String, nullable=False)
-    username: str = Column(String, nullable=False)
-    email: str = Column(String, nullable=False, unique=True)
-    password: str = Column(String, nullable=False)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    username: Mapped[str] = mapped_column(String, nullable=False)
+    email: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+    password: Mapped[str] = mapped_column(String, nullable=False)
     products = relationship("Inventory",back_populates="user")
 
     def __repr__(self):
@@ -31,7 +31,6 @@ class Inventory(Base):
 
     id: int = Column(Integer, primary_key=True)
     name: str = Column(String, nullable=False)
-    product: str = Column(String, nullable=False)
     price: int = Column(Integer, nullable=False)
     description: str = Column(String, nullable=False)
     user = relationship("User",back_populates="products")

@@ -1,16 +1,22 @@
-from pydantic import BaseModel, EmailStr, SecretStr
-
+from pydantic import BaseModel, EmailStr, SecretStr, ConfigDict
+from typing import Optional
 
 class UserCreate(BaseModel):
     name: str
     username: str
     email: EmailStr
-    password: SecretStr
+    password: str
 
 class UserResponse(BaseModel):
     name: str
     username: str
     email: EmailStr
+
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    username: Optional[str] = None
+
+    model_config=ConfigDict(extra='ignore')
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -18,10 +24,10 @@ class UserLogin(BaseModel):
 
 class InventoryCheck(BaseModel):
     product_name: str
-    product_price: str
+    product_price: int
     product_description: str
 
-
-test_user = UserCreate(name="james", username="xoxouser12", email="james@mail.com", password="123456")
-
-print(test_user)
+class InventoryResponse(BaseModel):
+    name: str
+    price: int
+    description: str
