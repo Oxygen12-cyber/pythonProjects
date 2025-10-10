@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 
-from sqlalchemy import select, update
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from dbmodels.db_model import get_db, User, Inventory
@@ -77,15 +77,25 @@ def change_username(user_email:str, user_updates: UserUpdate, db:Session=Depends
 
 # delete products
 @app.delete("/products/")
-def delete_product(user_email:str, product_id:int, db:Session=Depends(get_db)):
+def delete_product(user_email:str, product_name:str, db:Session=Depends(get_db)):
     user_exists = db.execute(select(User).where(User.email==user_email)).scalars().first()
-    users_product = db.execute(select(Inventory).where(Inventory.id==product_id)).scalars().first()
+    users_product = db.execute(select(Inventory).where(Inventory.name.like(f"%{product_name}%"))).scalars().first()
 
     if not user_exists:
         raise HTTPException(status_code=404, detail='user with that email does not exist')
     if not users_product:
-        raise HTTPException(status_code=404, detail='product with that id does not exist')
+        raise HTTPException(status_code=404, detail='product with that name does not exist')
     db.delete(users_product)
     db.commit()
     db.refresh(user_exists)
-    return "{'message':'this product has been deleted'}"
+    return {'message':'this product has been deleted'}
+
+# delete user account
+@app.delete("/user/")
+def delete_user_account(user_email: str, db:Session=Depends(get_db)):
+    user_exists = db.execute(select(User).where(User.email==user_email)).scalars().first()
+    if not user_exists:
+        raise HTTPException(status_code=404, detail="this user does not exists")
+    db.delete(user_exists)
+    db.commit()
+    return {"message":"user's account has been deleted"}

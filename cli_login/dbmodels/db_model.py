@@ -21,7 +21,7 @@ class User(Base):
     username: Mapped[str] = mapped_column(String, nullable=False)
     email: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     password: Mapped[str] = mapped_column(String, nullable=False)
-    products = relationship("Inventory",back_populates="user")
+    products = relationship("Inventory", back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"{self.username}'s email is {self.email}"
