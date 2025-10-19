@@ -1,18 +1,47 @@
-
-
 import requests
+import logging
 from datetime import datetime
+import json
+import 
 
-API_URL = "http://127.0.0.1:8000"
+API_URL = "http://127.0.0.1:8000/"
 request = requests.get(API_URL)
 print(request)
 
 def register():
-    pass
+    your_name = input(str("Your name: "))
+    username = input(str("Your Username: "))
+    email = input(str("Your Email: "))
+    password = input(str("Your Password: "))
+    user_data = {"name" : your_name,"username" : username,"email" : email,"password" : password}
+    for key, value in user_data.items():
+        if not value:
+            return f"error: {value}"
+    send = requests.post(url=API_URL + "register_user", json=user_data, timeout=4)
+    print()
+    return send.content
+
 
 # login function
 def login():
-    pass 
+
+    #take input
+    email = str(input("your email: "))
+    password = str(input("your password: "))
+    #validate input
+    if not email and password:
+        login_data = {"email":email,"password":password}
+    #send to api
+        verify = requests.post(url=API_URL+"/login", json=login_data, timeout=8)
+    #get api response
+    try:
+        verify.status_code == 200
+    except Exception as e:
+        print(e)
+
+    #parse session data
+    with open("SESSION.json", "r+"):
+        pass 
 
 # add task
 def add_new_product():
@@ -44,7 +73,7 @@ def logout():
 
 
 def main():
-    pass
+    
     # actions = {
     #     "1":register,
     #     "2":login,   
@@ -76,7 +105,7 @@ def main():
     #     "6": del_my_account,
     #     "6": logout,
     # }
-        
+    register()
 
 if __name__ == "__main__":
     main()

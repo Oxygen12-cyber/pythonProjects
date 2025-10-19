@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from dbmodels.db_model import get_db, User, Inventory
-from pymodels.pyd_model import UserCreate, UserResponse, UserUpdate, InventoryCheck, InventoryResponse
+from pymodels.pyd_model import UserLogin, UserCreate, UserResponse, UserUpdate, InventoryCheck, InventoryResponse
 
 
 app = FastAPI(title="Cli App")
@@ -14,8 +14,17 @@ def home():
     return "hello user"
 
 # DB OPERATIONS 
+# login user
+@app.post("/login")
+def login_user(user: UserLogin, db: Session = Depends(get_db)):
+    unhashed = user.password.get_secret_value()
+    existing_user = db.execute(select(User).where(User.email == user.email).where(User.password==unhashed)).scalars().first()
+    if not existing_user:
+        raise HTTPException(status_code=400, detail="User not found")
+    return {"message": "this user is verified"}
+
 # create new user
-@app.post("/register_user", response_model=UserResponse)
+@app.post("/register", response_model=UserResponse)
 def create_new_user(user: UserCreate, db: Session = Depends(get_db)):
     user_exists = db.execute(select(User).where(User.email == user.email)).scalars().first()
 
