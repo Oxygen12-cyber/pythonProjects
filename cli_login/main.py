@@ -2,7 +2,6 @@ import requests
 import logging
 from datetime import datetime
 import json
-import 
 
 API_URL = "http://127.0.0.1:8000/"
 request = requests.get(API_URL)
@@ -40,7 +39,7 @@ def login():
         print(e)
 
     #parse session data
-    with open("SESSION.json", "r+"):
+    with open("SESSION.json", "r+") as session:
         pass 
 
 # add task
