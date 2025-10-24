@@ -9,7 +9,8 @@ from components.components import IconBox, MEChatBox, TextBox, AIChatBox
 def main(page: ft.Page):
     page.horizontal_alignment=ft.CrossAxisAlignment.CENTER
     page.bgcolor="white"
-    page.vertical_alignment=ft.MainAxisAlignment.CENTER,
+    page.vertical_alignment=ft.MainAxisAlignment.CENTER
+    page.window.min_width=500
     page.padding=0
     page.spacing=0
 
@@ -25,11 +26,13 @@ def main(page: ft.Page):
 
     def send_text_message(e):
         chat_list.controls.append(MEChatBox(response=chat_box.value))
+        chat_box.value=""
+        chat_box.update()
         chat_list.update()
-        response=send_response(chat_box.value)
-        chat_list.controls.append(AIChatBox(response=response))
-        print(response)
-        chat_list.update()
+        # response=send_response(chat_box.value)
+        # chat_list.controls.append(AIChatBox(response=response))
+        # print(response)
+        # chat_list.update()
         
 
     

@@ -60,7 +60,7 @@ class AIChatBox(Container):
         super().__init__()
         self.ai_reply = response
         self.alignment=ft.alignment.center_left
-        self.content=ft.Row(
+        self.chatbox=ft.Row(
             [
                 ft.Container(
                     ft.Image(src=imgsrc, fit=ft.ImageFit.COVER),
@@ -70,11 +70,12 @@ class AIChatBox(Container):
                 ),
                 ft.Column(
                     [
-                        ft.Text(value="AI", color="black", size=18),
+                        ft.Text(value="AI", color="white", size=18),
                         ft.Container(
+                            width=200,
                             bgcolor="#5C7581",
-                            content=ft.Text(value=self.ai_reply, text_align=ft.TextAlign.LEFT, overflow=ft.TextOverflow.CLIP,expand=True,no_wrap=False,max_lines=20),
-                            border=ft.border.all(1,Colors.with_opacity(0.6, "white")),
+                            content=ft.Text(value=self.ai_reply, text_align=ft.TextAlign.LEFT, overflow=ft.TextOverflow.CLIP,expand=True,no_wrap=False,max_lines=0),
+                            border=ft.border.all(1, Colors.with_opacity(0.6, "white")),
                             padding=8,
                             border_radius=radius
                         )
@@ -82,12 +83,23 @@ class AIChatBox(Container):
                     spacing=0,
                     alignment=ft.MainAxisAlignment.START,
                     horizontal_alignment=ft.CrossAxisAlignment.START,
-                    expand=True,
-                    expand_loose=True
+                    # expand=True,
+                    # expand_loose=True
                 ),
             ],
             alignment=ft.MainAxisAlignment.START,
             vertical_alignment=ft.CrossAxisAlignment.END
+        )
+        self.content=ft.Container(
+            # height=100,
+            padding=ft.padding.only(left=10,right=10,top=5,bottom=5),
+            bgcolor=ft.Colors.TRANSPARENT,
+            content=ft.Row(
+                [self.chatbox],
+                alignment=ft.MainAxisAlignment.START,
+                expand=True,
+                expand_loose=False
+            )
         )
 
         
@@ -99,11 +111,11 @@ class MEChatBox(Container):
         self.expand=True
         self.me_reply = response
         self.alignment=ft.alignment.center_right
-        self.content=ft.Row(
+        self.chatbox=ft.Row(
             [
                 ft.Column(
                     [
-                        ft.Text(value="ME", color="black", size=18),
+                        ft.Text(value="ME", color="white", size=18),
                         ft.Container(
                             bgcolor="#5C7581",
                             content=ft.Text(value=self.me_reply),
@@ -115,8 +127,8 @@ class MEChatBox(Container):
                     spacing=0,
                     alignment=ft.MainAxisAlignment.START,
                     horizontal_alignment=ft.CrossAxisAlignment.END,
-                    expand=True,
-                    expand_loose=True
+                    # expand=True,
+                    # expand_loose=True
                 ),
                 ft.Container(
                     ft.Image(src=imgsrc, fit=ft.ImageFit.COVER),
@@ -127,6 +139,17 @@ class MEChatBox(Container):
             ],
             alignment=ft.MainAxisAlignment.START,
             vertical_alignment=ft.CrossAxisAlignment.END
+        )
+        self.content=ft.Container(
+            height=100,
+            padding=20,
+            bgcolor=ft.Colors.TRANSPARENT,
+            content=ft.Row(
+                [self.chatbox],
+                alignment=ft.MainAxisAlignment.END,
+                expand=True,
+                expand_loose=False
+            )
         )
 
     
