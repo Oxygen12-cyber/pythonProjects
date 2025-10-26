@@ -29,10 +29,10 @@ def main(page: ft.Page):
         chat_box.value=""
         chat_box.update()
         chat_list.update()
-        # response=send_response(chat_box.value)
-        # chat_list.controls.append(AIChatBox(response=response))
-        # print(response)
-        # chat_list.update()
+        response=send_response(chat_box.value)
+        chat_list.controls.append(AIChatBox(response=response))
+        print(response)
+        chat_list.update()
         
 
     

@@ -1,7 +1,7 @@
 import os
 
-from google import genai
 from dotenv import load_dotenv
+from google import genai
 
 load_dotenv()
 key = os.getenv('GEMINI_API_KEY')
@@ -26,5 +26,5 @@ class send_response():
         return f"{self.response.text}"
     
 
-# chat = send_response("Are you an AI?")
-# print(chat)
+chat = send_response("Are you an AI?")
+print(chat)
