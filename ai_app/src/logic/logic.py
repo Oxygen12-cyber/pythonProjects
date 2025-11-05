@@ -14,9 +14,11 @@ client = genai.Client(api_key=key)
 # print(response.text)
 
 class send_response():
-    def __init__(self, message:str):
-        self.model="gemini-2.5-flash"
-        self.contents=message
+    def __init__(self, model:str = "gemini-2.5-flash"):
+        self.model=model
+
+    def send(self, message: str):
+        pass
 
         self.response = client.models.generate_content(
             model=self.model, contents=self.contents
