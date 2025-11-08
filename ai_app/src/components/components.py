@@ -1,4 +1,5 @@
 import flet as ft
+from flet import BoxConstraints
 
 from logic.logic import send_response
 
@@ -88,7 +89,7 @@ class TextBox(ft.Container):
 
 
 class AIChatBox(ft.Container):
-    def __init__(self, response=None, size: int = 36, radius: int = 12):
+    def __init__(self, response=None, radius: int = 12):
         super().__init__()
         self.ai_reply = response
         self.alignment = ft.alignment.center_left
@@ -112,7 +113,7 @@ class AIChatBox(ft.Container):
                 [self.chatbox],
                 alignment=ft.MainAxisAlignment.START,
                 expand=True,
-                expand_loose=False,
+                expand_loose=True,
             ),
         )
 
@@ -124,7 +125,7 @@ class MEChatBox(ft.Container):
         self.alignment = ft.alignment.center_right
         self.chatbox = ft.Container(
             bgcolor="#78ACFE",
-            content=ft.Text(value=self.me_reply, color="white"),
+            content=ft.Text(value=self.me_reply, color="white", text_align=ft.TextAlign.LEFT),
             border=ft.border.all(3, ft.Colors.with_opacity(1, "#5995F7")),
             padding=8,
             border_radius=radius,
@@ -150,6 +151,7 @@ box = ft.TextField(
     multiline=True,
     shift_enter=True,
     autofocus=True,
+    cursor_color="black",
     border=ft.InputBorder.NONE,
     text_vertical_align=ft.VerticalAlignment.CENTER,
     on_submit=onsubmit,
@@ -169,8 +171,8 @@ field = ft.Container(
     content=ft.Stack(
         [
             ft.Container(
-                width=600,
-                height=80,
+                width=500,
+                height=60,
                 border_radius=55,
                 expand=True,
                 expand_loose=True,
@@ -191,16 +193,16 @@ field = ft.Container(
                 ),
             ),
             ft.Container(
-                width=600,
-                height=80,
+                width=500,
+                height=60,
                 border_radius=55,
                 expand=True,
                 expand_loose=True,
                 bgcolor="white",
-                padding=ft.padding.only(top=10),
+                padding=ft.padding.only(left=10),
                 border=ft.border.all(
                     2, color=ft.Colors.with_opacity(0.6, "#000000")),
-                alignment=ft.alignment.bottom_center,
+                alignment=ft.alignment.center,
                 content=ft.Row([box, send], tight=True),
             ),
         ]
