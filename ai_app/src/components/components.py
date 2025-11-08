@@ -1,4 +1,3 @@
-from flet import Container, Colors
 import flet as ft
 
 from logic.logic import send_response
@@ -34,7 +33,7 @@ class MenuIcon(ft.Container):
         )
 
 
-class TextBox(Container):
+class TextBox(ft.Container):
     def __init__(self, value, margin, hint_text, padding, border_radius:int=10, bgcolor="yellow", width:int=200, height:int=30, on_submit=None):
         super().__init__()
         self.width=width
@@ -65,7 +64,7 @@ class TextBox(Container):
         )
 
 
-class AIChatBox(Container):
+class AIChatBox(ft.Container):
     def __init__(self, response=None, imgsrc=None, size:int=36, radius:int=12):
         super().__init__()
         self.ai_reply = response
@@ -74,7 +73,7 @@ class AIChatBox(Container):
             width=400,
             bgcolor="#FCFCFC",
             content=ft.Text(value=self.ai_reply, text_align=ft.TextAlign.LEFT, overflow=ft.TextOverflow.CLIP,),
-            border=ft.border.all(2, Colors.with_opacity(1, "white")),
+            border=ft.border.all(2, ft.Colors.with_opacity(1, "white")),
             padding=8,
             border_radius=radius     
         )
@@ -91,7 +90,7 @@ class AIChatBox(Container):
         )
 
 
-class MEChatBox(Container):
+class MEChatBox(ft.Container):
     def __init__(self, response=None, imgsrc=None, size:int=36, radius:int=12):
         super().__init__()
         self.me_reply = response
@@ -99,7 +98,7 @@ class MEChatBox(Container):
         self.chatbox=ft.Container(
             bgcolor="#78ACFE",
             content=ft.Text(value=self.me_reply, color="white"),
-            border=ft.border.all(3,Colors.with_opacity(1, "#5995F7")),
+            border=ft.border.all(3,ft.Colors.with_opacity(1, "#5995F7")),
             padding=8,
             border_radius=radius
         )
@@ -123,7 +122,7 @@ box = ft.TextField(
     on_submit=onsubmit,
 )
 
-send = ft.Container(ft.Image(src="src/assets/icons/plus_ico.png",fit=ft.ImageFit.COVER),width=40, height=40)
+send = ft.Container(ft.Image(src="src/assets/icons/send_ico.png",fit=ft.ImageFit.COVER),width=40, height=40)
 
 field = ft.Container(
     margin=ft.margin.only(bottom=20),
@@ -183,6 +182,7 @@ menu_bar=ft.Container(
 
 chat_area = ft.Column(
     expand=True,
+    scroll="hidden",
     auto_scroll=True,
     alignment=ft.MainAxisAlignment.START,
     horizontal_alignment=ft.CrossAxisAlignment.CENTER
@@ -199,7 +199,8 @@ chat_block=ft.Container(
             ft.Container(
                 expand=True,bgcolor="transparent",
                 padding=12,
-                content=chat_area
+                content=chat_area,
+                height=900
             ),
             field
         ],
