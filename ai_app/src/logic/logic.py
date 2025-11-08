@@ -18,16 +18,18 @@ class send_response:
             model=self.model, contents=message
         )
         return self.response.text
-        
 
     def __call__(self, message: str):
-        return self.send(message)
+        try:
+            return self.send(message)
+        except Exception as e:
+            print(f"error {e}")
+            return
 
-    def __repr__(self):          
-        return f'{self.response.text}'
+    def __repr__(self):
+        return f"{self.response.text}"
 
 
 # chat = send_response()
 # # word = chat.send("are you an ai?")
 # print(chat("what do you think im doing"))
-
