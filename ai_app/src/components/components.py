@@ -182,7 +182,7 @@ menu_bar=ft.Container(
 
 chat_area = ft.Column(
     expand=True,
-    scroll="hidden",
+    scroll=ft.ScrollMode.HIDDEN,
     auto_scroll=True,
     alignment=ft.MainAxisAlignment.START,
     horizontal_alignment=ft.CrossAxisAlignment.CENTER
