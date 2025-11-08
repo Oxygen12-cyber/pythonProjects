@@ -7,11 +7,13 @@ chat=send_response()
 
 def onsubmit(e):
     chat_area.controls.append(MEChatBox(response=box.value))
-    
     chat_area.update()
-    tag_ai = chat(message=box.value)
+
+    user_message = box.value
     box.value=""
     box.update()
+
+    tag_ai = chat(message=user_message)
     chat_area.controls.append(AIChatBox(response=tag_ai))
     chat_area.update()
     return
@@ -113,6 +115,8 @@ class MEChatBox(ft.Container):
         )
 
 box = ft.TextField(
+    hint_text="Ask Anything....",
+    hint_style=ft.TextStyle(color=ft.Colors.BLACK38, size=18,weight=ft.FontWeight.W_500),
     width=500, height=80,
     multiline=True,
     shift_enter=True,
@@ -122,7 +126,7 @@ box = ft.TextField(
     on_submit=onsubmit,
 )
 
-send = ft.Container(ft.Image(src="src/assets/icons/send_ico.png",fit=ft.ImageFit.COVER),width=40, height=40)
+send = ft.GestureDetector(ft.Container(ft.Image(src="src/assets/icons/send_ico.png",fit=ft.ImageFit.COVER),width=40, height=40),on_tap=onsubmit)
 
 field = ft.Container(
     margin=ft.margin.only(bottom=20),
@@ -151,8 +155,8 @@ field = ft.Container(
                 )
             ),
             ft.Container(
-                width=600, height=80, border_radius=55, expand=True, expand_loose=True, bgcolor="white",
-                border=ft.border.all(1, color=ft.Colors.with_opacity(0.6, "#000000")),
+                width=600, height=80, border_radius=55, expand=True, expand_loose=True, bgcolor="white",padding=ft.padding.only(top=10),
+                border=ft.border.all(2, color=ft.Colors.with_opacity(0.6, "#000000")),
                 alignment=ft.alignment.bottom_center,
                 content=ft.Row(
                     [box,send],tight=True
